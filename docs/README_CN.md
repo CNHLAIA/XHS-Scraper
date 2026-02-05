@@ -43,10 +43,6 @@
 
 ## 安装方法
 
-### 第一步：下载项目
-
-**方法 A：使用 Git（推荐）**
-
 1. **打开命令行工具**：
    - **Windows**: 按 `Win + R`，输入 `cmd`，按回车
    - **Mac**: 打开"启动台" → 搜索"终端" → 打开
@@ -55,27 +51,14 @@
 ```bash
 git clone https://github.com/CNHLAIA/XHS-Scraper.git
 cd XHS-Scraper
-```
-
-**方法 B：直接下载 ZIP**
-
-1. 打开浏览器，访问 https://github.com/CNHLAIA/XHS-Scraper
-2. 点击绿色的 **Code** 按钮
-3. 选择 **Download ZIP**
-4. 解压到你想要的目录（如桌面）
-
-### 第二步：安装依赖
-
-在项目目录下打开命令行，运行：
-```bash
 pip install -e .
 ```
 
-> 💡 **提示**：如果提示 `pip` 不存在，请先安装 Python 3.10 或更高版本
+> 如果提示 `pip` 不存在，请先安装 Python 3.10 或更高版本
 
 ## 快速开始
 
-跟着下面的步骤，5 分钟内运行你的第一个爬虫脚本！
+跟着下面的步骤以运行脚本
 
 ### 第一步：创建脚本文件
 
@@ -113,8 +96,10 @@ async def main():
         print(f"你的昵称: {user.nickname}")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+     asyncio.run(main())
 ```
+
+> 可直接运行 `main.py`
 
 ### 第二步：运行脚本
 
@@ -179,6 +164,8 @@ cookies = extract_chrome_cookies()
 # 返回的 cookies 可直接传入 XHSClient
 ```
 
+> 完整脚本见 `chrome_cookies.py`
+
 ### 方法三：二维码登录
 通过扫描二维码实现自动登录：
 
@@ -186,9 +173,11 @@ cookies = extract_chrome_cookies()
 from xhs_scraper import qr_login
 
 async def login():
-    cookies = await qr_login()
-    print(f"获取到的 Cookies: {cookies}")
+     cookies = await qr_login()
+     print(f"获取到的 Cookies: {cookies}")
 ```
+
+> 完整脚本见 `qr_login.py`
 
 ## API 详细文档
 

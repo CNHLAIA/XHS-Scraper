@@ -43,36 +43,18 @@ An efficient async Python library for scraping Xiaohongshu (小红书/RED) data,
 
 ## Installation
 
-### Step 1: Download the Project
-
-**Option A: Using Git (Recommended)**
-
 1. **Open your terminal**:
    - **Windows**: Press `Win + R`, type `cmd`, press Enter
    - **Mac**: Open Launchpad → Search "Terminal" → Open it
-   - **Linux**: Open your terminal emulator (Ctrl+Alt+T on Ubuntu)
 
 2. **Run these commands**:
 ```bash
 git clone https://github.com/CNHLAIA/XHS-Scraper.git
 cd XHS-Scraper
-```
-
-**Option B: Download ZIP**
-
-1. Open your browser and go to https://github.com/CNHLAIA/XHS-Scraper
-2. Click the green **Code** button
-3. Select **Download ZIP**
-4. Extract to your desired location (e.g., Desktop)
-
-### Step 2: Install Dependencies
-
-Open terminal in the project directory and run:
-```bash
 pip install -e .
 ```
 
-> 💡 **Tip**: If `pip` is not found, please install Python 3.10 or higher first
+> If `pip` is not found, please install Python 3.10 or higher first
 
 ## Quick Start
 
@@ -116,6 +98,8 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+> You can also run `main.py` directly
 
 ### Step 2: Run the Script
 
