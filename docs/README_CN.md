@@ -1,5 +1,7 @@
 # xhs-scraper - 小红书异步爬虫库
 
+**[English](../README.md)** | **[中文文档](./README_CN.md)**
+
 一个基于 Python 异步特性的高效小红书数据采集工具，支持笔记、用户、评论采集及搜索功能。
 
 ## 目录
@@ -44,7 +46,7 @@
 推荐使用开发模式安装：
 
 ```bash
-git clone https://github.com/your-repo/xhs-scraper.git
+git clone https://github.com/CNHLAIA/XHS-Scraper.git
 cd xhs-scraper
 pip install -e .
 ```
