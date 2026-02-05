@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xhs-scraper"
+version = "0.1.0"
+description = "Xiaohongshu (小红书) async scraper library"
+requires-python = ">=3.10"
+dependencies = [
+    "xhshow~=0.1.8",
+    "httpx>=0.27.0",
+    "tenacity>=8.0.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]
