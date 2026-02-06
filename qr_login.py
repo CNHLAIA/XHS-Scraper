@@ -5,12 +5,29 @@
 import asyncio
 from xhs_scraper import XHSClient, qr_login
 from xhs_scraper.signature import XHShowSignatureProvider
+from xhs_scraper.utils.qr_login import QRLoginError
 
 
 async def main():
     print("正在生成登录二维码...")
     signature_provider = XHShowSignatureProvider()
-    cookies = await qr_login(signature_provider)
+    cookies = {
+        "a1": "此处需要填",
+        "web_session": "此处需要填",
+    }
+
+    if not cookies.get("a1"):
+        print("未提供有效的 a1，请先在浏览器登录小红书后重试")
+        return
+
+    try:
+        cookies = await qr_login(signature_provider, cookies)
+    except QRLoginError as exc:
+        message = str(exc)
+        if "IP存在风险" in message:
+            print("接口提示 IP 风险，请切换可靠网络环境后重试。")
+            return
+        raise
 
     if not cookies:
         print("登录失败或超时")
