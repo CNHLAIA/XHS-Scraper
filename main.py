@@ -4,12 +4,22 @@ xhs-scraper Quick Start Script
 """
 
 import asyncio
+import os
 from xhs_scraper import XHSClient
 
 
 async def main():
-    # 替换为你的 Cookie 值
-    cookies = {"a1": "your_a1_value", "web_session": "your_web_session_value"}
+    a1 = os.environ.get("XHS_A1")
+    web_session = os.environ.get("XHS_WEB_SESSION")
+
+    if not a1 or not web_session:
+        print("请设置环境变量 XHS_A1 和 XHS_WEB_SESSION")
+        print("示例:")
+        print("  set XHS_A1=your_a1_value")
+        print("  set XHS_WEB_SESSION=your_web_session_value")
+        return
+
+    cookies = {"a1": a1, "web_session": web_session}
 
     async with XHSClient(cookies=cookies, rate_limit=2.0) as client:
         user = await client.users.get_self_info()

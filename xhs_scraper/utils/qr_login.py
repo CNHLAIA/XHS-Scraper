@@ -30,7 +30,7 @@ class QRExpiredError(QRLoginError):
 async def create_qr_code(
     signature_provider: SignatureProvider,
     cookies: Optional[Dict[str, str]] = None,
-) -> str:
+) -> Dict[str, str]:
     """Create a new QR code for login.
 
     Args:
@@ -75,12 +75,12 @@ async def create_qr_code(
                 )
 
             qr_data = data.get("data", {})
-            qr_id = qr_data.get("qrCode", {}).get("qrcodeId")
-
+            qr_code = qr_data.get("qrCode", {})
+            qr_id = qr_code.get("qrcodeId")
+            qr_url = qr_code.get("url")
             if not qr_id:
                 raise APIError(resp.status, "No QR code ID in response", data)
-
-            return qr_id
+            return {"qr_id": qr_id, "qr_url": qr_url}
 
 
 async def poll_qr_status(
@@ -186,7 +186,12 @@ async def qr_login(
 
     # Create QR code
     try:
-        qr_id = await create_qr_code(signature_provider, cookies)
+        qr_result = await create_qr_code(signature_provider, cookies)
+        qr_id = qr_result["qr_id"]
+        qr_url = qr_result["qr_url"]
+        print(f"\n请用小红书 APP 扫描以下二维码登录:")
+        print(f"  {qr_url}\n")
+        print("等待扫描中...")
     except APIError as e:
         raise QRLoginError(f"Failed to create QR code: {e}")
 

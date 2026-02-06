@@ -4,11 +4,13 @@
 
 import asyncio
 from xhs_scraper import XHSClient, qr_login
+from xhs_scraper.signature import XHShowSignatureProvider
 
 
 async def main():
     print("正在生成登录二维码...")
-    cookies = await qr_login()
+    signature_provider = XHShowSignatureProvider()
+    cookies = await qr_login(signature_provider)
 
     if not cookies:
         print("登录失败或超时")
