@@ -7,6 +7,8 @@ keyword-based search with page-based pagination.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, Optional
+import time
+import random
 
 from xhs_scraper.models import SearchResultResponse
 
@@ -20,6 +22,32 @@ NOTE_TYPE_MAP = {
     "VIDEO": 1,
     "IMAGE": 2,
 }
+
+# Sort type mapping: user-friendly to API format
+SORT_TYPE_MAP = {
+    "GENERAL": "general",
+    "TIME_DESC": "time_descending",
+    "POPULARITY": "popularity_descending",
+}
+
+
+def _base36_encode(number: int) -> str:
+    """Encode a number to base36 string."""
+    alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
+    if number == 0:
+        return "0"
+    result = []
+    while number:
+        number, remainder = divmod(number, 36)
+        result.append(alphabet[remainder])
+    return "".join(reversed(result))
+
+
+def _generate_search_id() -> str:
+    """Generate a unique search_id for API requests."""
+    e = int(time.time() * 1000) << 64
+    t = int(random.uniform(0, 2147483646))
+    return _base36_encode(e + t)
 
 
 class SearchScraper:
@@ -67,8 +95,8 @@ class SearchScraper:
             "keyword": keyword,
             "page": page,
             "page_size": normalized_page_size,
-            "search_id": "",
-            "sort": sort,
+            "search_id": _generate_search_id(),
+            "sort": SORT_TYPE_MAP.get(sort, "general"),
             "note_type": NOTE_TYPE_MAP.get(note_type, 0),
         }
 
@@ -79,7 +107,8 @@ class SearchScraper:
         )
 
         # Parse response
-        items_data = response_data.get("items", [])
+        data = response_data.get("data", {})
+        items_data = data.get("items", [])
         items = []
         for item_data in items_data:
             try:
@@ -95,8 +124,8 @@ class SearchScraper:
 
         return SearchResultResponse(
             items=items,
-            has_more=response_data.get("has_more", False),
-            cursor=response_data.get("cursor", ""),
+            has_more=data.get("has_more", False),
+            cursor=data.get("cursor", ""),
         )
 
 
