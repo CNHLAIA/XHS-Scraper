@@ -14,6 +14,14 @@ if TYPE_CHECKING:
     from xhs_scraper.client import XHSClient
 
 
+# Note type mapping: string to integer for API
+NOTE_TYPE_MAP = {
+    "ALL": 0,
+    "VIDEO": 1,
+    "IMAGE": 2,
+}
+
+
 class SearchScraper:
     """Scraper for searching notes on XHS."""
 
@@ -61,7 +69,7 @@ class SearchScraper:
             "page_size": normalized_page_size,
             "search_id": "",
             "sort": sort,
-            "note_type": note_type,
+            "note_type": NOTE_TYPE_MAP.get(note_type, 0),
         }
 
         response_data = await self._client._request(
