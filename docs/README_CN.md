@@ -11,6 +11,7 @@
 - [安装方法](#安装方法)
 - [快速开始](#快速开始)
 - [Cookie 获取方法](#cookie-获取方法)
+- [登录后操作指南](#登录后操作指南)
 - [API 详细文档](#api-详细文档)
 - [数据模型](#数据模型)
 - [数据导出](#数据导出)
@@ -178,6 +179,252 @@ async def login():
 ```
 
 > 完整脚本见 `qr_login.py`
+
+## 登录后操作指南
+
+登录成功后，你可以使用以下功能采集小红书数据。所有示例代码都可以直接复制运行。
+
+### 1. 验证登录状态
+
+首先验证你的 Cookie 是否有效：
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "在这里粘贴你的a1值",
+        "web_session": "在这里粘贴你的web_session值"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        user = await client.users.get_self_info()
+        print(f"✅ 登录成功！昵称: {user.nickname}")
+        print(f"粉丝数: {user.followers}, 关注数: {user.following}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 2. 采集单篇笔记
+
+通过笔记 ID 和 xsec_token 获取笔记详情：
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "在这里粘贴你的a1值",
+        "web_session": "在这里粘贴你的web_session值"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # note_id 和 xsec_token 可从笔记链接或搜索结果中获取
+        note = await client.notes.get_note(
+            note_id="笔记ID",
+            xsec_token="xsec_token值"
+        )
+        print(f"标题: {note.title}")
+        print(f"内容: {note.desc}")
+        print(f"点赞: {note.liked_count}, 评论: {note.commented_count}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 3. 采集用户的所有笔记
+
+获取指定用户发布的笔记列表：
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "在这里粘贴你的a1值",
+        "web_session": "在这里粘贴你的web_session值"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # 采集前 3 页笔记
+        result = await client.notes.get_user_notes(
+            user_id="用户ID",
+            max_pages=3
+        )
+        print(f"共获取 {len(result.items)} 篇笔记")
+        for note in result.items:
+            print(f"- {note.title}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 4. 获取用户信息
+
+获取其他用户的主页信息：
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "在这里粘贴你的a1值",
+        "web_session": "在这里粘贴你的web_session值"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        user = await client.users.get_user_info(user_id="用户ID")
+        print(f"昵称: {user.nickname}")
+        print(f"简介: {user.bio}")
+        print(f"粉丝: {user.followers}, 关注: {user.following}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 5. 采集笔记评论
+
+获取笔记的评论和子评论：
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "在这里粘贴你的a1值",
+        "web_session": "在这里粘贴你的web_session值"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # 获取一级评论
+        comments = await client.comments.get_comments(
+            note_id="笔记ID",
+            max_pages=2
+        )
+        print(f"共获取 {len(comments.items)} 条评论")
+        
+        for comment in comments.items:
+            print(f"{comment.user.nickname}: {comment.content}")
+            
+            # 获取子评论（回复）
+            if comment.comment_id:
+                sub_comments = await client.comments.get_sub_comments(
+                    note_id="笔记ID",
+                    root_comment_id=comment.comment_id
+                )
+                for sub in sub_comments.items:
+                    print(f"  └─ {sub.user.nickname}: {sub.content}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 6. 搜索笔记
+
+通过关键词搜索笔记，支持排序和类型筛选：
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "在这里粘贴你的a1值",
+        "web_session": "在这里粘贴你的web_session值"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # 搜索笔记
+        # sort: "GENERAL"(综合), "TIME_DESC"(最新), "POPULARITY"(最热)
+        # note_type: "ALL"(全部), "VIDEO"(视频), "IMAGE"(图文)
+        result = await client.search.search_notes(
+            keyword="露营装备",
+            sort="POPULARITY",
+            note_type="ALL",
+            page=1,
+            page_size=20
+        )
+        
+        print(f"搜索到 {len(result.items)} 篇笔记")
+        for note in result.items:
+            print(f"- {note.title} (点赞: {note.liked_count})")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 7. 导出数据
+
+将采集的数据导出为 JSON 或 CSV 格式：
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+from xhs_scraper.utils import export_to_json, export_to_csv
+
+async def main():
+    cookies = {
+        "a1": "在这里粘贴你的a1值",
+        "web_session": "在这里粘贴你的web_session值"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # 搜索笔记
+        result = await client.search.search_notes("美食推荐")
+        
+        # 导出为 JSON
+        export_to_json(result.items, "output/notes.json")
+        print("✅ 已导出到 output/notes.json")
+        
+        # 导出为 CSV（Excel 可直接打开）
+        export_to_csv(result.items, "output/notes.csv")
+        print("✅ 已导出到 output/notes.csv")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 8. 下载图片和视频
+
+下载笔记中的媒体文件：
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+from xhs_scraper.utils import download_media
+
+async def main():
+    cookies = {
+        "a1": "在这里粘贴你的a1值",
+        "web_session": "在这里粘贴你的web_session值"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # 获取笔记详情
+        note = await client.notes.get_note(
+            note_id="笔记ID",
+            xsec_token="xsec_token值"
+        )
+        
+        # 下载图片
+        if note.images:
+            paths = await download_media(
+                urls=note.images,
+                output_dir="downloads/",
+                filename_pattern="{note_id}_{index}.{ext}",
+                note_id=note.note_id
+            )
+            print(f"✅ 已下载 {len(paths)} 个文件到 downloads/ 目录")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
 
 ## API 详细文档
 

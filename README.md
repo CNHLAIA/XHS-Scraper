@@ -11,6 +11,7 @@ An efficient async Python library for scraping Xiaohongshu (小红书/RED) data,
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Cookie Setup](#cookie-setup)
+- [After Login - Usage Guide](#after-login---usage-guide)
 - [API Reference](#api-reference)
 - [Data Models](#data-models)
 - [Data Export](#data-export)
@@ -154,6 +155,252 @@ python my_first_scraper.py
 - Save these two values - you'll need them later
 
 > ⚠️ **Security Warning**: Cookies contain your login credentials. **NEVER share them with anyone!**
+
+## After Login - Usage Guide
+
+After successfully logging in, you can use the following features to scrape Xiaohongshu data. All code examples can be copied and run directly.
+
+### 1. Verify Login Status
+
+First, verify that your Cookie is valid:
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "paste_your_a1_value_here",
+        "web_session": "paste_your_web_session_value_here"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        user = await client.users.get_self_info()
+        print(f"✅ Login successful! Nickname: {user.nickname}")
+        print(f"Followers: {user.followers}, Following: {user.following}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 2. Scrape a Single Note
+
+Get note details by note ID and xsec_token:
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "paste_your_a1_value_here",
+        "web_session": "paste_your_web_session_value_here"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # note_id and xsec_token can be obtained from note links or search results
+        note = await client.notes.get_note(
+            note_id="note_id_here",
+            xsec_token="xsec_token_here"
+        )
+        print(f"Title: {note.title}")
+        print(f"Content: {note.desc}")
+        print(f"Likes: {note.liked_count}, Comments: {note.commented_count}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 3. Scrape User's Notes
+
+Get all notes posted by a specific user:
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "paste_your_a1_value_here",
+        "web_session": "paste_your_web_session_value_here"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # Scrape first 3 pages of notes
+        result = await client.notes.get_user_notes(
+            user_id="user_id_here",
+            max_pages=3
+        )
+        print(f"Retrieved {len(result.items)} notes")
+        for note in result.items:
+            print(f"- {note.title}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 4. Get User Info
+
+Get another user's profile information:
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "paste_your_a1_value_here",
+        "web_session": "paste_your_web_session_value_here"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        user = await client.users.get_user_info(user_id="user_id_here")
+        print(f"Nickname: {user.nickname}")
+        print(f"Bio: {user.bio}")
+        print(f"Followers: {user.followers}, Following: {user.following}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 5. Scrape Note Comments
+
+Get comments and sub-comments from a note:
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "paste_your_a1_value_here",
+        "web_session": "paste_your_web_session_value_here"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # Get top-level comments
+        comments = await client.comments.get_comments(
+            note_id="note_id_here",
+            max_pages=2
+        )
+        print(f"Retrieved {len(comments.items)} comments")
+        
+        for comment in comments.items:
+            print(f"{comment.user.nickname}: {comment.content}")
+            
+            # Get sub-comments (replies)
+            if comment.comment_id:
+                sub_comments = await client.comments.get_sub_comments(
+                    note_id="note_id_here",
+                    root_comment_id=comment.comment_id
+                )
+                for sub in sub_comments.items:
+                    print(f"  └─ {sub.user.nickname}: {sub.content}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 6. Search Notes
+
+Search notes by keyword with sorting and type filtering:
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+
+async def main():
+    cookies = {
+        "a1": "paste_your_a1_value_here",
+        "web_session": "paste_your_web_session_value_here"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # Search notes
+        # sort: "GENERAL" (default), "TIME_DESC" (latest), "POPULARITY" (popular)
+        # note_type: "ALL" (default), "VIDEO", "IMAGE"
+        result = await client.search.search_notes(
+            keyword="camping gear",
+            sort="POPULARITY",
+            note_type="ALL",
+            page=1,
+            page_size=20
+        )
+        
+        print(f"Found {len(result.items)} notes")
+        for note in result.items:
+            print(f"- {note.title} (Likes: {note.liked_count})")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 7. Export Data
+
+Export scraped data to JSON or CSV format:
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+from xhs_scraper.utils import export_to_json, export_to_csv
+
+async def main():
+    cookies = {
+        "a1": "paste_your_a1_value_here",
+        "web_session": "paste_your_web_session_value_here"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # Search notes
+        result = await client.search.search_notes("food recommendations")
+        
+        # Export to JSON
+        export_to_json(result.items, "output/notes.json")
+        print("✅ Exported to output/notes.json")
+        
+        # Export to CSV (can be opened directly in Excel)
+        export_to_csv(result.items, "output/notes.csv")
+        print("✅ Exported to output/notes.csv")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 8. Download Images and Videos
+
+Download media files from notes:
+
+```python
+import asyncio
+from xhs_scraper import XHSClient
+from xhs_scraper.utils import download_media
+
+async def main():
+    cookies = {
+        "a1": "paste_your_a1_value_here",
+        "web_session": "paste_your_web_session_value_here"
+    }
+    
+    async with XHSClient(cookies=cookies) as client:
+        # Get note details
+        note = await client.notes.get_note(
+            note_id="note_id_here",
+            xsec_token="xsec_token_here"
+        )
+        
+        # Download images
+        if note.images:
+            paths = await download_media(
+                urls=note.images,
+                output_dir="downloads/",
+                filename_pattern="{note_id}_{index}.{ext}",
+                note_id=note.note_id
+            )
+            print(f"✅ Downloaded {len(paths)} files to downloads/ directory")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
 
 ## API Reference
 
