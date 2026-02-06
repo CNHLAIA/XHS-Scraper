@@ -6,7 +6,7 @@ This module provides NoteScraper class for:
 """
 
 from typing import Dict, Any, Optional, List, Set
-from ..models import NoteResponse, PaginatedResponse
+from ..models import NoteResponse, PaginatedResponse, UserResponse
 from ..client import XHSClient
 
 
@@ -113,15 +113,14 @@ class NoteScraper:
             )
 
             # Extract items and cursor from response
-            items = response_data.get("data", {}).get("items", [])
+            items = response_data.get("data", {}).get("notes", [])
             next_cursor = response_data.get("data", {}).get("cursor", "")
             has_more = response_data.get("data", {}).get("has_more", False)
 
             # Process notes with duplicate detection
             page_notes = []
             for item in items:
-                note_card = item.get("note_card", {})
-                note_id = note_card.get("note_id")
+                note_id = item.get("note_id")
 
                 # Skip duplicates
                 if note_id and note_id in seen_note_ids:
@@ -130,7 +129,24 @@ class NoteScraper:
                 if note_id:
                     seen_note_ids.add(note_id)
 
-                note_response = NoteResponse(**note_card)
+                user_data = item.get("user", {})
+                interact_info = item.get("interact_info", {})
+
+                user = UserResponse(
+                    user_id=user_data.get("user_id"),
+                    nickname=user_data.get("nickname") or user_data.get("nick_name"),
+                    avatar=user_data.get("avatar"),
+                )
+
+                note_response = NoteResponse(
+                    note_id=note_id,
+                    title=item.get("display_title"),
+                    user=user,
+                    liked_count=int(interact_info.get("liked_count", 0))
+                    if interact_info.get("liked_count")
+                    else None,
+                    xsec_token=item.get("xsec_token"),
+                )
                 page_notes.append(note_response)
 
             all_notes.extend(page_notes)

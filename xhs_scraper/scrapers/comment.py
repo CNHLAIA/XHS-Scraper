@@ -61,14 +61,16 @@ class CommentScraper:
             seen_cursors.add(current_cursor)
 
             # Make API request
-            payload = {
+            params = {
                 "note_id": note_id,
                 "cursor": current_cursor,
+                "top_comment_id": "",
+                "image_formats": "jpg,webp,avif",
             }
             response_data = await self._client._request(
-                "POST",
+                "GET",
                 "/api/sns/web/v2/comment/page",
-                payload=payload,
+                params=params,
             )
 
             # Parse response
