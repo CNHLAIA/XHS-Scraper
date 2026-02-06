@@ -59,15 +59,6 @@ pip install -e .
 
 > If `pip` is not found, please install Python 3.10 or higher first
 
-**For detailed installation and deployment instructions**, see [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md).
-
-This guide includes:
-- Multiple installation methods (standard, development, Docker, PyPI)
-- Configuration and setup
-- Verification steps
-- Troubleshooting common issues
-- Production deployment guidance
-
 ## Quick Start
 
 Follow these steps to run your first scraper script in 5 minutes!
@@ -166,6 +157,31 @@ python my_first_scraper.py
 - Save these two values - you'll need them later
 
 > ⚠️ **Security Warning**: Cookies contain your login credentials. **NEVER share them with anyone!**
+
+### Method 2: Chrome Auto-Extract
+If you're already logged into Xiaohongshu in Chrome, you can use the built-in tool to auto-extract:
+
+```python
+from xhs_scraper.utils import extract_chrome_cookies
+
+cookies = extract_chrome_cookies()
+# The returned cookies can be passed directly to XHSClient
+```
+
+> See `chrome_cookies.py` for the complete script
+
+### Method 3: QR Code Login
+Login automatically by scanning a QR code:
+
+```python
+from xhs_scraper import qr_login
+
+async def login():
+    cookies = await qr_login()
+    print(f"Obtained Cookies: {cookies}")
+```
+
+> See `qr_login.py` for the complete script
 
 ## After Login - Usage Guide
 
@@ -481,15 +497,10 @@ python -m pytest tests/ -v
 
 # Expected output:
 # 195 passed in ~11.33s ✅
-```
-
-### Test Results
-
-For detailed test execution results and quality metrics, see:
-- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - How to run tests and understand test organization
-- **[TEST_RESULTS_REPORT.md](./TEST_RESULTS_REPORT.md)** - Detailed test execution report with full metrics
+# ```
 
 ### Running Specific Tests
+
 
 ```bash
 # Run only unit tests
@@ -509,8 +520,6 @@ python -m pytest tests/ --cov=xhs_scraper --cov-report=html
 
 - **Integration Tests (139 tests)**: API responses, error handling, client initialization
 - **Unit Tests (56 tests)**: Exceptions, models, rate limiter, signature validation
-
-For comprehensive testing documentation and advanced techniques, see [TESTING_GUIDE.md](./TESTING_GUIDE.md).
 
 ## API Reference
 
@@ -638,19 +647,6 @@ This project includes a built-in token bucket rate limiter.
 - **Purpose**: Automatically smooths request frequency to prevent being blocked by Xiaohongshu servers.
 
 ## Examples
-
-### Documentation Index
-
-For comprehensive guides and references, see:
-
-| Document | Purpose | For Who |
-|----------|---------|---------|
-| **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** | How to run tests and advanced testing techniques | Developers, QA |
-| **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** | Installation, configuration, and deployment | Users, System Admins |
-| **[TEST_RESULTS_REPORT.md](./TEST_RESULTS_REPORT.md)** | Detailed test results and quality metrics | Developers, Stakeholders |
-| **[FINAL_PROJECT_STATUS.md](./FINAL_PROJECT_STATUS.md)** | Project completion and quality status | Project Managers |
-| **[COOKIE_EXTRACTION_GUIDE.md](./COOKIE_EXTRACTION_GUIDE.md)** | Step-by-step cookie setup guide | End Users |
-| **[ERROR_REFERENCE.md](./ERROR_REFERENCE.md)** | Common errors and solutions | Developers, Users |
 
 ### Example 1: Scrape User's Notes
 

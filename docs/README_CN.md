@@ -19,6 +19,7 @@
 - [错误处理](#错误处理)
 - [速率限制](#速率限制)
 - [完整示例代码](#完整示例代码)
+- [测试](#测试)
 - [常见问题 FAQ](#常见问题-faq)
 - [注意事项](#注意事项)
 
@@ -473,6 +474,49 @@ python search_batch.py
 # 修改配置后直接运行
 python search_batch.py
 ```
+
+## 🧪 测试
+
+本项目包含全面的测试，具有完整的测试覆盖率：
+
+- **195 个测试** 覆盖所有组件
+- **100% 通过率** - 所有测试通过 ✅
+- **56 个单元测试** 用于独立组件（异常、模型、速率限制器、签名）
+- **139 个集成测试** 用于 API 响应、错误处理和客户端初始化
+- **完整覆盖** 所有模块和功能
+
+### 快速测试
+
+使用单个命令运行所有测试：
+
+```bash
+# 运行所有测试并显示详细输出
+python -m pytest tests/ -v
+
+# 预期输出：
+# 195 passed in ~11.33s ✅
+```
+
+### 运行特定测试
+
+```bash
+# 仅运行单元测试
+python -m pytest tests/unit/ -v
+
+# 仅运行集成测试
+python -m pytest tests/integration/ -v
+
+# 运行特定测试文件
+python -m pytest tests/integration/test_api_responses.py -v
+
+# 运行并生成覆盖率报告
+python -m pytest tests/ --cov=xhs_scraper --cov-report=html
+```
+
+### 测试分类
+
+- **集成测试 (139 个测试)**: API 响应、错误处理、客户端初始化
+- **单元测试 (56 个测试)**: 异常、模型、速率限制器、签名验证
 
 ## API 详细文档
 

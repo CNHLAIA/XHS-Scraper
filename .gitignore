@@ -58,3 +58,15 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Output directories
+output/
+
+# Planning files
+.sisyphus/
+
+# Session/completion files
+SESSION_*.md
+COMPLETION_*.md
+*_REPORT.md
+*_SUMMARY.md
