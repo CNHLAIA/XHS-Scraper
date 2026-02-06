@@ -426,6 +426,54 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+## 可用脚本
+
+项目提供了多个即用型脚本，无需编写代码即可使用。只需修改脚本顶部的配置区域，然后运行即可。
+
+### 脚本列表
+
+| 脚本名称 | 功能说明 | 配置项 |
+|---------|---------|--------|
+| `search_batch.py` | 批量搜索爬取笔记，支持多页爬取和自动导出 | KEYWORD, MAX_PAGES, SORT, NOTE_TYPE |
+| `get_note.py` | 获取单篇笔记详情 | NOTE_ID, XSEC_TOKEN |
+| `get_user_notes.py` | 获取指定用户的所有笔记 | USER_ID, MAX_PAGES |
+| `get_user_info.py` | 获取用户主页信息 | USER_ID |
+| `get_comments.py` | 获取笔记评论 | NOTE_ID, MAX_PAGES |
+| `download_media.py` | 下载笔记中的图片/视频 | NOTE_ID, XSEC_TOKEN, OUTPUT_DIR |
+
+### 使用方法
+
+1. **打开脚本文件**，找到顶部的配置区域：
+```python
+# ========== 配置区域 / Configuration ==========
+COOKIES = {
+    "a1": "在这里粘贴你的a1值",
+    "web_session": "在这里粘贴你的web_session值",
+}
+# ... 其他配置项
+# ========== 配置结束 / End Configuration ==========
+```
+
+2. **填写你的 Cookie** 和其他必要参数
+
+3. **运行脚本**：
+```bash
+python search_batch.py
+```
+
+### 推荐：批量搜索脚本
+
+`search_batch.py` 是最常用的脚本，支持：
+- 多页爬取（自动翻页）
+- 排序方式选择（综合/最新/最热）
+- 笔记类型筛选（全部/视频/图文）
+- 自动导出为 JSON 和 CSV 格式
+
+```bash
+# 修改配置后直接运行
+python search_batch.py
+```
+
 ## API 详细文档
 
 ### XHSClient 客户端

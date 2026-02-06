@@ -402,6 +402,54 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+## Available Scripts
+
+The project provides ready-to-use scripts that require no coding. Simply modify the configuration section at the top of each script and run it.
+
+### Script List
+
+| Script | Description | Configuration |
+|--------|-------------|---------------|
+| `search_batch.py` | Batch search and scrape notes with multi-page support and auto-export | KEYWORD, MAX_PAGES, SORT, NOTE_TYPE |
+| `get_note.py` | Fetch single note details | NOTE_ID, XSEC_TOKEN |
+| `get_user_notes.py` | Fetch all notes from a specific user | USER_ID, MAX_PAGES |
+| `get_user_info.py` | Fetch user profile information | USER_ID |
+| `get_comments.py` | Fetch note comments | NOTE_ID, MAX_PAGES |
+| `download_media.py` | Download images/videos from a note | NOTE_ID, XSEC_TOKEN, OUTPUT_DIR |
+
+### How to Use
+
+1. **Open the script file** and find the configuration section at the top:
+```python
+# ========== 配置区域 / Configuration ==========
+COOKIES = {
+    "a1": "Paste your a1 here",
+    "web_session": "Paste your web_session here",
+}
+# ... other config options
+# ========== 配置结束 / End Configuration ==========
+```
+
+2. **Fill in your Cookie** and other required parameters
+
+3. **Run the script**:
+```bash
+python search_batch.py
+```
+
+### Recommended: Batch Search Script
+
+`search_batch.py` is the most commonly used script, supporting:
+- Multi-page scraping (automatic pagination)
+- Sort options (general/latest/popular)
+- Note type filtering (all/video/image)
+- Auto-export to JSON and CSV formats
+
+```bash
+# Run after modifying configuration
+python search_batch.py
+```
+
 ## API Reference
 
 ### XHSClient
