@@ -9,7 +9,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal, Optional
 import time
 import random
-from pprint import pformat
 
 from xhs_scraper.models import SearchResultResponse
 
@@ -113,83 +112,35 @@ class SearchScraper:
         items = []
         for item_data in items_data:
             try:
-                # Extract note data from item
-                note_data = item_data.get("note_card", {})
-                if note_data:
-                    print("DEBUG note_card:", pformat(note_data))
+                note_card = item_data.get("note_card", {})
+                user_data = note_card.get("user", {})
+                interact_info = note_card.get("interact_info", {})
 
-                interact_info = note_data.get("interact_info") or {}
-                stats = note_data.get("stats") or interact_info
+                from xhs_scraper.models import NoteResponse, UserResponse
 
-                image_list = (
-                    note_data.get("image_list") or note_data.get("images") or []
+                user = UserResponse(
+                    user_id=user_data.get("user_id"),
+                    nickname=user_data.get("nickname") or user_data.get("nick_name"),
+                    avatar=user_data.get("avatar"),
                 )
-                images = None
-                if isinstance(image_list, list):
-                    image_urls = []
-                    for image in image_list:
-                        if isinstance(image, str):
-                            image_urls.append(image)
-                            continue
-                        if isinstance(image, dict):
-                            url = (
-                                image.get("url")
-                                or image.get("url_default")
-                                or image.get("url_pre")
-                            )
-                            if url:
-                                image_urls.append(url)
-                    if image_urls:
-                        images = image_urls
-
-                video_data = (
-                    note_data.get("video")
-                    or note_data.get("video_info")
-                    or note_data.get("video_info_v2")
-                )
-                if isinstance(video_data, dict):
-                    video = (
-                        video_data.get("url")
-                        or video_data.get("default_url")
-                        or video_data.get("master_url")
-                    )
-                elif isinstance(video_data, str):
-                    video = video_data
-                else:
-                    video = None
-
-                from xhs_scraper.models import NoteResponse
 
                 note = NoteResponse(
-                    note_id=note_data.get("note_id") or note_data.get("id"),
-                    title=note_data.get("title"),
-                    desc=note_data.get("desc"),
-                    images=images,
-                    video=video,
-                    user=note_data.get("user"),
-                    stats=stats,
-                    liked_count=(
-                        interact_info.get("liked_count")
-                        or interact_info.get("like_count")
-                        or stats.get("liked_count")
-                        or stats.get("like_count")
-                    ),
-                    commented_count=(
-                        interact_info.get("comment_count")
-                        or interact_info.get("commented_count")
-                        or stats.get("comment_count")
-                        or stats.get("commented_count")
-                    ),
-                    shared_count=(
-                        interact_info.get("share_count")
-                        or interact_info.get("shared_count")
-                        or stats.get("share_count")
-                        or stats.get("shared_count")
-                    ),
+                    note_id=item_data.get("id"),
+                    title=note_card.get("display_title"),
+                    user=user,
+                    liked_count=int(interact_info.get("liked_count", 0))
+                    if interact_info.get("liked_count")
+                    else None,
+                    commented_count=int(interact_info.get("comment_count", 0))
+                    if interact_info.get("comment_count")
+                    else None,
+                    shared_count=int(interact_info.get("shared_count", 0))
+                    if interact_info.get("shared_count")
+                    else None,
+                    xsec_token=item_data.get("xsec_token"),
                 )
                 items.append(note)
             except Exception:
-                # Skip malformed note data
                 pass
 
         return SearchResultResponse(

@@ -47,6 +47,7 @@ class NoteResponse(BaseModel):
     liked_count: Optional[int] = None
     commented_count: Optional[int] = None
     shared_count: Optional[int] = None
+    xsec_token: Optional[str] = None
 
 
 class SearchResultResponse(NoteResponse):
