@@ -10,12 +10,12 @@ from xhs_scraper.utils import download_media
 
 # ========== 配置区域 / Configuration ==========
 COOKIES = {
-    "a1": "在这里粘贴你的a1值",  # Paste your a1 here
-    "web_session": "在这里粘贴你的web_session值",  # Paste your web_session here
+    "a1": "PASTE_YOUR_A1_VALUE_HERE",  # Paste your a1 here
+    "web_session": "PASTE_YOUR_WEB_SESSION_VALUE_HERE",  # Paste your web_session here
 }
 
-NOTE_ID = "7397841456987897348"  # 笔记ID / Note ID
-XSEC_TOKEN = ""  # 从笔记链接中获取的xsec_token / xsec_token from note link
+NOTE_ID = "PASTE_YOUR_NOTE_ID_HERE"  # 笔记ID / Note ID
+XSEC_TOKEN = "PASTE_YOUR_XSEC_TOKEN_HERE"  # 从笔记链接中获取的xsec_token / xsec_token from note link
 OUTPUT_DIR = "downloads"  # 下载目录 / Download directory
 # ========== 配置结束 / End Configuration ==========
 

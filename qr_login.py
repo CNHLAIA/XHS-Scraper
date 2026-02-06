@@ -12,8 +12,8 @@ async def main():
     print("正在生成登录二维码...")
     signature_provider = XHShowSignatureProvider()
     cookies = {
-        "a1": "此处需要填",
-        "web_session": "此处需要填",
+        "a1": "PASTE_YOUR_A1_VALUE_HERE",
+        "web_session": "PASTE_YOUR_WEB_SESSION_VALUE_HERE",
     }
 
     if not cookies.get("a1"):

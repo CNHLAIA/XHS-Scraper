@@ -8,11 +8,11 @@ from xhs_scraper import XHSClient
 
 # ========== 配置区域 / Configuration ==========
 COOKIES = {
-    "a1": "在这里粘贴你的a1值",  # Paste your a1 here
-    "web_session": "在这里粘贴你的web_session值",  # Paste your web_session here
+    "a1": "PASTE_YOUR_A1_VALUE_HERE",  # Paste your a1 here
+    "web_session": "PASTE_YOUR_WEB_SESSION_VALUE_HERE",  # Paste your web_session here
 }
 
-USER_ID = "用户ID"  # 要获取的用户ID / User ID to fetch
+USER_ID = "PASTE_YOUR_USER_ID_HERE"  # 要获取的用户ID / User ID to fetch
 # ========== 配置结束 / End Configuration ==========
 
 

@@ -10,8 +10,8 @@ from xhs_scraper.utils import export_to_json, export_to_csv
 
 # ========== 配置区域 / Configuration ==========
 COOKIES = {
-    "a1": "在这里粘贴你的a1值",  # Paste your a1 here
-    "web_session": "在这里粘贴你的web_session值",  # Paste your web_session here
+    "a1": "PASTE_YOUR_A1_VALUE_HERE",  # Paste your a1 here
+    "web_session": "PASTE_YOUR_WEB_SESSION_VALUE_HERE",  # Paste your web_session here
 }
 
 KEYWORD = "露营装备"  # 搜索关键词 / Search keyword

@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal, Optional
 import time
 import random
+from pprint import pformat
 
 from xhs_scraper.models import SearchResultResponse
 
@@ -114,9 +115,78 @@ class SearchScraper:
             try:
                 # Extract note data from item
                 note_data = item_data.get("note_card", {})
+                if note_data:
+                    print("DEBUG note_card:", pformat(note_data))
+
+                interact_info = note_data.get("interact_info") or {}
+                stats = note_data.get("stats") or interact_info
+
+                image_list = (
+                    note_data.get("image_list") or note_data.get("images") or []
+                )
+                images = None
+                if isinstance(image_list, list):
+                    image_urls = []
+                    for image in image_list:
+                        if isinstance(image, str):
+                            image_urls.append(image)
+                            continue
+                        if isinstance(image, dict):
+                            url = (
+                                image.get("url")
+                                or image.get("url_default")
+                                or image.get("url_pre")
+                            )
+                            if url:
+                                image_urls.append(url)
+                    if image_urls:
+                        images = image_urls
+
+                video_data = (
+                    note_data.get("video")
+                    or note_data.get("video_info")
+                    or note_data.get("video_info_v2")
+                )
+                if isinstance(video_data, dict):
+                    video = (
+                        video_data.get("url")
+                        or video_data.get("default_url")
+                        or video_data.get("master_url")
+                    )
+                elif isinstance(video_data, str):
+                    video = video_data
+                else:
+                    video = None
+
                 from xhs_scraper.models import NoteResponse
 
-                note = NoteResponse(**note_data)
+                note = NoteResponse(
+                    note_id=note_data.get("note_id") or note_data.get("id"),
+                    title=note_data.get("title"),
+                    desc=note_data.get("desc"),
+                    images=images,
+                    video=video,
+                    user=note_data.get("user"),
+                    stats=stats,
+                    liked_count=(
+                        interact_info.get("liked_count")
+                        or interact_info.get("like_count")
+                        or stats.get("liked_count")
+                        or stats.get("like_count")
+                    ),
+                    commented_count=(
+                        interact_info.get("comment_count")
+                        or interact_info.get("commented_count")
+                        or stats.get("comment_count")
+                        or stats.get("commented_count")
+                    ),
+                    shared_count=(
+                        interact_info.get("share_count")
+                        or interact_info.get("shared_count")
+                        or stats.get("share_count")
+                        or stats.get("shared_count")
+                    ),
+                )
                 items.append(note)
             except Exception:
                 # Skip malformed note data

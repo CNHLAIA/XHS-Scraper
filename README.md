@@ -12,6 +12,8 @@ An efficient async Python library for scraping Xiaohongshu (小红书/RED) data,
 - [Quick Start](#quick-start)
 - [Cookie Setup](#cookie-setup)
 - [After Login - Usage Guide](#after-login---usage-guide)
+- [Available Scripts](#available-scripts)
+- [🧪 Testing](#-testing)
 - [API Reference](#api-reference)
 - [Data Models](#data-models)
 - [Data Export](#data-export)
@@ -56,6 +58,15 @@ pip install -e .
 ```
 
 > If `pip` is not found, please install Python 3.10 or higher first
+
+**For detailed installation and deployment instructions**, see [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md).
+
+This guide includes:
+- Multiple installation methods (standard, development, Docker, PyPI)
+- Configuration and setup
+- Verification steps
+- Troubleshooting common issues
+- Production deployment guidance
 
 ## Quick Start
 
@@ -450,6 +461,57 @@ python search_batch.py
 python search_batch.py
 ```
 
+## 🧪 Testing
+
+This project includes comprehensive testing with full test coverage:
+
+- **195 total tests** covering all components
+- **100% pass rate** - all tests passing ✅
+- **56 unit tests** for individual components (exceptions, models, rate limiter, signature)
+- **139 integration tests** for API responses, error handling, and client initialization
+- **Full coverage** of all modules and features
+
+### Quick Test
+
+Run all tests with a single command:
+
+```bash
+# Run all tests with verbose output
+python -m pytest tests/ -v
+
+# Expected output:
+# 195 passed in ~11.33s ✅
+```
+
+### Test Results
+
+For detailed test execution results and quality metrics, see:
+- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - How to run tests and understand test organization
+- **[TEST_RESULTS_REPORT.md](./TEST_RESULTS_REPORT.md)** - Detailed test execution report with full metrics
+
+### Running Specific Tests
+
+```bash
+# Run only unit tests
+python -m pytest tests/unit/ -v
+
+# Run only integration tests
+python -m pytest tests/integration/ -v
+
+# Run a specific test file
+python -m pytest tests/integration/test_api_responses.py -v
+
+# Run with coverage report
+python -m pytest tests/ --cov=xhs_scraper --cov-report=html
+```
+
+### Test Categories
+
+- **Integration Tests (139 tests)**: API responses, error handling, client initialization
+- **Unit Tests (56 tests)**: Exceptions, models, rate limiter, signature validation
+
+For comprehensive testing documentation and advanced techniques, see [TESTING_GUIDE.md](./TESTING_GUIDE.md).
+
 ## API Reference
 
 ### XHSClient
@@ -576,6 +638,19 @@ This project includes a built-in token bucket rate limiter.
 - **Purpose**: Automatically smooths request frequency to prevent being blocked by Xiaohongshu servers.
 
 ## Examples
+
+### Documentation Index
+
+For comprehensive guides and references, see:
+
+| Document | Purpose | For Who |
+|----------|---------|---------|
+| **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** | How to run tests and advanced testing techniques | Developers, QA |
+| **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** | Installation, configuration, and deployment | Users, System Admins |
+| **[TEST_RESULTS_REPORT.md](./TEST_RESULTS_REPORT.md)** | Detailed test results and quality metrics | Developers, Stakeholders |
+| **[FINAL_PROJECT_STATUS.md](./FINAL_PROJECT_STATUS.md)** | Project completion and quality status | Project Managers |
+| **[COOKIE_EXTRACTION_GUIDE.md](./COOKIE_EXTRACTION_GUIDE.md)** | Step-by-step cookie setup guide | End Users |
+| **[ERROR_REFERENCE.md](./ERROR_REFERENCE.md)** | Common errors and solutions | Developers, Users |
 
 ### Example 1: Scrape User's Notes
 

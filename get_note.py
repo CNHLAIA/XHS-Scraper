@@ -8,12 +8,12 @@ from xhs_scraper import XHSClient
 
 # ========== 配置区域 / Configuration ==========
 COOKIES = {
-    "a1": "在这里粘贴你的a1值",  # Paste your a1 here
-    "web_session": "在这里粘贴你的web_session值",  # Paste your web_session here
+    "a1": "PASTE_YOUR_A1_VALUE_HERE",  # Paste your a1 here
+    "web_session": "PASTE_YOUR_WEB_SESSION_VALUE_HERE",  # Paste your web_session here
 }
 
-NOTE_ID = "在这里粘贴笔记ID"  # Paste your note ID here
-XSEC_TOKEN = "在这里粘贴xsec_token值"  # Paste your xsec_token here
+NOTE_ID = "PASTE_YOUR_NOTE_ID_HERE"  # Paste your note ID here
+XSEC_TOKEN = "PASTE_YOUR_XSEC_TOKEN_HERE"  # Paste your xsec_token here
 # ========== 配置结束 / End Configuration ==========
 
 
